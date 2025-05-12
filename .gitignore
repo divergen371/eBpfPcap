@@ -1,0 +1,72 @@
+# CLion関連
+.idea/
+cmake-build-*/
+
+# ビルド成果物
+build/
+*.o
+*.ko
+*.obj
+*.elf
+*.ilk
+*.map
+*.exp
+*.gch
+*.pch
+*.so
+*.so.*
+*.dylib
+*.dll
+*.a
+*.la
+*.lo
+*.lib
+*.exe
+*.out
+*.app
+
+# デバッグファイル
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# カーネルモジュール関連
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# eBPF関連
+*.bpf.o
+*.bpf.ll
+*.skel.h
+
+# CMake関連
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# システム関連
+.DS_Store
+Thumbs.db
+
+# エディタ関連（バックアップファイルなど）
+*~
+\#*\#
+.\#*
+*.swp
+*.swo
+
+# コア・ダンプファイル
+core
