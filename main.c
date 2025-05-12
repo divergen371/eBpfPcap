@@ -175,13 +175,13 @@ int perf_event_open(struct perf_event_attr *attr, pid_t pid, int cpu,
 #error "Unsupported architecture for __NR_perf_event_open"
 #endif
 #endif
-    return syscall((long) __NR_perf_event_open, attr, pid, cpu, group_fd,
-                   flags);
+    return (int)syscall((long)__NR_perf_event_open, attr, pid, cpu, group_fd,
+                       flags);
 }
 
 int main(int argc, char **argv) {
     struct bpf_object *obj = NULL;
-    int ifindex = 0;
+    unsigned int ifindex = 0;
 
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <interface>\n", argv[0]);
@@ -225,7 +225,8 @@ int main(int argc, char **argv) {
             "../cmake-build-debug"
         };
         int found = 0;
-        for (int i = 0; i < sizeof(build_dirs) / sizeof(build_dirs[0]); i++) {
+        for (size_t i = 0; i < sizeof(build_dirs) / sizeof(build_dirs[0]); i
+             ++) {
             snprintf(prog_path, sizeof(prog_path), "%s/xdp_prog_kern.o",
                      build_dirs[i]);
             if (access(prog_path, F_OK) != -1) {
@@ -276,13 +277,13 @@ int main(int argc, char **argv) {
     }
 
     // Set up perf events for online CPUs
-    const unsigned int ncpus = get_nprocs();
-    for (unsigned int i = 0; i < ncpus; i++) {
+    const int ncpus = get_nprocs();
+    for (int i = 0; i < ncpus; i++) {
         setup_perf_event(map_fd, i);
     }
 
     // Attach XDP program to interface
-    const int err = bpf_xdp_attach(ifindex, prog_fd, 0, NULL);
+    const int err = bpf_xdp_attach((int)ifindex, prog_fd, 0, NULL);
     if (err < 0) {
         fprintf(stderr, "Failed to attach XDP program: %s\n", strerror(-err));
         bpf_object__close(obj);
@@ -298,7 +299,7 @@ int main(int argc, char **argv) {
     }
 
     // Clean up
-    bpf_xdp_detach(ifindex, 0, NULL);
+    bpf_xdp_detach((int)ifindex, 0, NULL);
 
     for (int i = 0; i < MAX_CPUS; i++) {
         if (headers[i]) {
